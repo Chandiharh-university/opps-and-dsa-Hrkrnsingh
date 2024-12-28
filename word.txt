@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+#include <unordered_map>
+#include <queue>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> dict(wordList.begin(), wordList.end());
+        vector<vector<string>> result;
+
+        if (dict.find(endWord) == dict.end()) return result;
+
+        unordered_map<string, vector<string>> graph;
+        unordered_map<string, int> levels;
+
+        // BFS to build the graph
+        if (!bfs(beginWord, endWord, dict, graph, levels)) return result;
+
+        vector<string> path;
+        path.push_back(beginWord);
+
+        // DFS to find all paths
+        dfs(beginWord, endWord, graph, path, result);
+        return result;
+    }
+
+private:
+    bool bfs(string& beginWord, string& endWord, unordered_set<string>& dict,
+             unordered_map<string, vector<string>>& graph, unordered_map<string, int>& levels) {
+        queue<string> q;
+        q.push(beginWord);
+        levels[beginWord] = 0;
+
+        while (!q.empty()) {
+            string word = q.front();
+            q.pop();
+
+            string currentWord = word;
+            int currentLevel = levels[word];
+
+            for (int i = 0; i < word.size(); ++i) {
+                char originalChar = word[i];
+
+                for (char c = 'a'; c <= 'z'; ++c) {
+                    word[i] = c;
+
+                    if (dict.find(word) != dict.end()) {
+                        if (levels.find(word) == levels.end()) {
+                            levels[word] = currentLevel + 1;
+                            q.push(word);
+                        }
+
+                        if (levels[word] == currentLevel + 1) {
+                            graph[currentWord].push_back(word);
+                        }
+                    }
+                }
+                word[i] = originalChar;
+            }
+        }
+
+        return levels.find(endWord) != levels.end();
+    }
+
+    void dfs(string& current, string& endWord, unordered_map<string, vector<string>>& graph,
+             vector<string>& path, vector<vector<string>>& result) {
+        if (current == endWord) {
+            result.push_back(path);
+            return;
+        }
+
+        for (const string& neighbor : graph[current]) {
+            path.push_back(neighbor);
+            dfs(neighbor, endWord, graph, path, result);
+            path.pop_back();
+        }
+    }
+};
+
+int main() {
+    Solution solution;
+    string beginWord = "hit";
+    string endWord = "cog";
+    vector<string> wordList = {"hot", "dot", "dog", "lot", "log", "cog"};
+
+    vector<vector<string>> result = solution.findLadders(beginWord, endWord, wordList);
+
+    for (const auto& path : result) {
+        for (const auto& word : path) {
+            cout << word << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}

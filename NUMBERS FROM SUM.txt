@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int> generateNumbersWithSum(int count, int sum) {
+    vector<int> result(count, 0);
+
+    if (count <= 0 || sum < 0) {
+        return result;
+    }
+
+    int average = sum / count;
+    int remainder = sum % count;
+
+    fill(result.begin(), result.end(), average);
+
+    for (int i = 0; i < remainder; ++i) {
+        result[i] += 1;
+    }
+
+    return result;
+}
+
+int main() {
+    int count, sum;
+
+    cout << "Enter the number of elements: ";
+    cin >> count;
+
+    cout << "Enter the desired sum: ";
+    cin >> sum;
+
+    vector<int> result = generateNumbersWithSum(count, sum);
+
+    if (count > 0 && sum >= 0) {
+        cout << "Numbers with the given sum: ";
+        for (int num : result) {
+            cout << num << " ";
+        }
+        cout << endl;
+    } else {
+        cout << "Invalid input. The count must be positive and the sum non-negative." << endl;
+    }
+
+    return 0;
+}
+

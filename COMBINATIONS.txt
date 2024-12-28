@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Helper function for generating combinations
+void combineHelper(int n, int k, int start, vector<int>& current, vector<vector<int>>& result) {
+    if (current.size() == k) {
+        result.push_back(current);
+        return;
+    }
+
+    for (int i = start; i <= n; ++i) {
+        current.push_back(i);
+        combineHelper(n, k, i + 1, current, result);
+        current.pop_back(); // Backtrack
+    }
+}
+
+// Main function to generate combinations
+vector<vector<int>> combine(int n, int k) {
+    vector<vector<int>> result;
+    vector<int> current;
+    combineHelper(n, k, 1, current, result);
+    return result;
+}
+
+int main() {
+    int n, k;
+    cout << "Enter the value of n: ";
+    cin >> n;
+    cout << "Enter the value of k: ";
+    cin >> k;
+
+    vector<vector<int>> combinations = combine(n, k);
+
+    cout << "All possible combinations: \n";
+    for (const auto& combo : combinations) {
+        for (int num : combo) {
+            cout << num << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}

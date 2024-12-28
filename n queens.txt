@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int totalNQueens(int n) {
+        vector<int> board(n, -1); // board[i] stores the column position of the queen in the ith row
+        return solveNQueens(0, n, board);
+    }
+
+private:
+    bool isSafe(int row, int col, vector<int>& board) {
+        for (int prevRow = 0; prevRow < row; ++prevRow) {
+            int prevCol = board[prevRow];
+            // Check column conflict or diagonal conflict
+            if (prevCol == col || abs(prevCol - col) == abs(prevRow - row)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    int solveNQueens(int row, int n, vector<int>& board) {
+        if (row == n) {
+            return 1; // Found a valid solution
+        }
+
+        int solutions = 0;
+        for (int col = 0; col < n; ++col) {
+            if (isSafe(row, col, board)) {
+                board[row] = col; // Place queen
+                solutions += solveNQueens(row + 1, n, board); // Recurse for next row
+                board[row] = -1; // Backtrack
+            }
+        }
+        return solutions;
+    }
+};
+
+// Example usage
+int main() {
+    Solution sol;
+    int n;
+    cout << "Enter the value of n: ";
+    cin >> n;
+    cout << "Total distinct solutions for " << n << "-Queens: " << sol.totalNQueens(n) << endl;
+    return 0;
+}

@@ -1,0 +1,92 @@
+#include <iostream>
+using namespace std;
+
+// Definition of a Node
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    // Constructor
+    Node(int value) {
+        data = value;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+
+// Function to insert a new node in the binary tree
+Node* insertNode(Node* root, int value) {
+    if (root == nullptr) {
+        return new Node(value);
+    }
+
+    if (value < root->data) {
+        root->left = insertNode(root->left, value);
+    } else {
+        root->right = insertNode(root->right, value);
+    }
+
+    return root;
+}
+
+// Inorder traversal (Left, Root, Right)
+void inorderTraversal(Node* root) {
+    if (root == nullptr) {
+        return;
+    }
+
+    inorderTraversal(root->left);
+    cout << root->data << " ";
+    inorderTraversal(root->right);
+}
+
+// Preorder traversal (Root, Left, Right)
+void preorderTraversal(Node* root) {
+    if (root == nullptr) {
+        return;
+    }
+
+    cout << root->data << " ";
+    preorderTraversal(root->left);
+    preorderTraversal(root->right);
+}
+
+// Postorder traversal (Left, Right, Root)
+void postorderTraversal(Node* root) {
+    if (root == nullptr) {
+        return;
+    }
+
+    postorderTraversal(root->left);
+    postorderTraversal(root->right);
+    cout << root->data << " ";
+}
+
+int main() {
+    Node* root = nullptr;
+
+    // Insert nodes into the binary tree
+    root = insertNode(root, 10);
+    root = insertNode(root, 6);
+    root = insertNode(root, 15);
+    root = insertNode(root, 3);
+    root = insertNode(root, 8);
+    root = insertNode(root, 12);
+    root = insertNode(root, 18);
+
+    // Perform tree traversals
+    cout << "Inorder Traversal: ";
+    inorderTraversal(root);
+    cout << endl;
+
+    cout << "Preorder Traversal: ";
+    preorderTraversal(root);
+    cout << endl;
+
+    cout << "Postorder Traversal: ";
+    postorderTraversal(root);
+    cout << endl;
+
+    return 0;
+}
